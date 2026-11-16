@@ -35,6 +35,7 @@ public class Client extends JFrame {
     private JButton sendButton;
 
     private WebSocketService chatService;
+    private String serverUrl = "http://localhost:3000";
 
     // Available colors matching server.js defaults
     private static final String[] COLOR_NAMES = {
@@ -49,13 +50,20 @@ public class Client extends JFrame {
     // =========================================================================
 
     public Client() {
+        this("http://localhost:3000");
+    }
+
+    public Client(String serverUrl) {
         super("Cluster.io");
+        if (serverUrl != null && !serverUrl.trim().isEmpty()) {
+            this.serverUrl = serverUrl.trim();
+        }
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
         // Main container with 10px padding
-        JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
+        JPanel mainPanel = new JPanel(new BorderLayout(100, 10));
         mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         // 1. Header Panel (Top: Username, Color, Status)
@@ -260,7 +268,7 @@ public class Client extends JFrame {
     // =========================================================================
 
     private void initNetwork() {
-        chatService = new WebSocketService("http://localhost:3000");
+        chatService = new WebSocketService(serverUrl);
 
         chatService.setListener(new WebSocketService.ChatEventListener() {
             @Override
@@ -305,9 +313,11 @@ public class Client extends JFrame {
     // =========================================================================
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            Client client = new Client();
+        String url = (args.length > 0) ? args[0] : "http://localhost:3000";
+         Client client = new Client(url);
             client.setVisible(true);
-        });
+        // SwingUtilities.invokeLater(() -> {
+           
+        // });
     }
 }

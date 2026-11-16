@@ -55,6 +55,7 @@ public class WebSocketService {
                     .build();
 
             client.newWebSocketBuilder()
+                    .header("ngrok-skip-browser-warning", "true")
                     .buildAsync(URI.create(wsUrl), new WebSocket.Listener() {
 
                         @Override
